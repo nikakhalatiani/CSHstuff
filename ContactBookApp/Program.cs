@@ -36,6 +36,11 @@ namespace ContactBookApp
                         phoneBook.RemoveContact(nameToRemove);
                         break;
                     case "list":
+                        if (phoneBook.IsEmpty())
+                        {
+                            Console.WriteLine("No contacts to list.");
+                            break;
+                        }
                         phoneBook.ListContacts();
                         break;
                     case "exit":

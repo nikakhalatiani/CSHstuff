@@ -17,22 +17,33 @@ namespace ContactBookApp
 
         public void AddContact(string name, string phoneNumber)
         {
-            if (!contacts.ContainsKey(name))
+            try
+            {
+            if (contacts.ContainsKey(name.ToLower()))
+            {
+                Console.WriteLine("Contact already exists");
+            }
+            else if (!IsPhoneNumberValid(phoneNumber))
+            {
+                Console.WriteLine("Invalid phone number.");
+            }
+            else
             {
                 contacts[name.ToLower()] = new Contact { Name = name, PhoneNumber = phoneNumber };
                 SaveContacts();
             }
-            else
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine("Contact already exists.");
+            Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
         public void RemoveContact(string name)
         {
-            if (contacts.ContainsKey(name))
+            if (contacts.ContainsKey(name.ToLower()))
             {
-                contacts.Remove(name);
+                contacts.Remove(name.ToLower());
                 SaveContacts();
             }
             else
@@ -64,22 +75,17 @@ namespace ContactBookApp
             }
         }
 
-        public bool IsEmpty()
+        public void FindContact(string name)
         {
-            return contacts.Count == 0;
-        }
-
-        public void FindContact(string name) // better patter matching can be used here
-        {
-            if (contacts.ContainsKey(name))
+            if (contacts.ContainsKey(name.ToLower()))
             {
-                Contact contact = contacts[name];
+                Contact contact = contacts[name.ToLower()];
                 Console.WriteLine($"Name: {contact.Name}, Phone Number: {contact.PhoneNumber}");
             }
             Dictionary<string, Contact> matchedContacts = MatchName(name, contacts);
             if (matchedContacts.Count > 0)
             {
-                Console.WriteLine("Did you mean:");
+                Console.WriteLine("We couldn't find the exact contact. Maybe you look");
                 foreach (var contact in matchedContacts)
                 {
                     Console.WriteLine($"Name: {contact.Value.Name}, Phone Number: {contact.Value.PhoneNumber}");
@@ -93,14 +99,21 @@ namespace ContactBookApp
 
         public void UpdateContact(string name, string newPhoneNumber)
         {
-            if (contacts.ContainsKey(name))
+            try
             {
-                contacts[name].PhoneNumber = newPhoneNumber;
+            if (contacts.ContainsKey(name.ToLower()))
+            {
+                contacts[name.ToLower()].PhoneNumber = newPhoneNumber;
                 SaveContacts();
             }
             else
             {
                 Console.WriteLine("Contact not found.");
+            }
+            }
+            catch (Exception ex)
+            {
+            Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
@@ -124,6 +137,12 @@ namespace ContactBookApp
             return matchedContacts;
         }
 
-}
+        public bool IsEmpty()
+        {
+            return contacts.Count == 0;
+        }
+
+    }
+
 
 }

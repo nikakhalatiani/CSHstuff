@@ -27,10 +27,9 @@ namespace ContactBookApp
             }
             set
             {
-                while ((value.Length != 9 || !int.TryParse(value, out _)) && (value.Length != 13 || !value.StartsWith("+995") || !int.TryParse(value.Substring(4), out _)))
+                if (string.IsNullOrEmpty(value))
                 {
-                    Console.WriteLine("Phone number is not valid.");
-                    value = Console.ReadLine();
+                    throw new ArgumentException("Name cannot be empty.");
                 }
                 phoneNumber = value;
             }
