@@ -16,23 +16,23 @@ namespace ContactBookApp
         {
             try
             {
-            if (contacts.ContainsKey(name.ToLower()))
-            {
-                Console.WriteLine("Contact already exists");
-            }
-            else if (!IsPhoneNumberValid(phoneNumber))
-            {
-                Console.WriteLine("Invalid phone number.");
-            }
-            else
-            {
-                contacts[name.ToLower()] = new Contact { Name = name, PhoneNumber = phoneNumber };
-                SaveContacts();
-            }
+                if (contacts.ContainsKey(name.ToLower()))
+                {
+                    Console.WriteLine("Contact already exists");
+                }
+                else if (!IsPhoneNumberValid(phoneNumber))
+                {
+                    Console.WriteLine("Invalid phone number.");
+                }
+                else
+                {
+                    contacts[name.ToLower()] = new Contact { Name = name, PhoneNumber = phoneNumber };
+                    SaveContacts();
+                }
             }
             catch (Exception ex)
             {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
@@ -98,19 +98,19 @@ namespace ContactBookApp
         {
             try
             {
-            if (contacts.ContainsKey(name.ToLower()))
-            {
-                contacts[name.ToLower()].PhoneNumber = newPhoneNumber;
-                SaveContacts();
-            }
-            else
-            {
-                Console.WriteLine("Contact not found.");
-            }
+                if (contacts.ContainsKey(name.ToLower()))
+                {
+                    contacts[name.ToLower()].PhoneNumber = newPhoneNumber;
+                    SaveContacts();
+                }
+                else
+                {
+                    Console.WriteLine("Contact not found.");
+                }
             }
             catch (Exception ex)
             {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 

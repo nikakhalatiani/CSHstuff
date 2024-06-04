@@ -19,7 +19,7 @@
                     case "add":
                         Console.WriteLine("Enter name:");
                         string name = Console.ReadLine();
-                        Console.WriteLine("Enter phone number:");
+                        Console.WriteLine("Enter phone number:\nFormat: 599123456 or +995599123456");
                         string phoneNumber = Console.ReadLine();
                         phoneBook.AddContact(name, phoneNumber);
                         break;
@@ -62,7 +62,7 @@
                         }
                         Console.WriteLine("Enter name:");
                         string nameToUpdate = Console.ReadLine();
-                        Console.WriteLine("Enter new phone number:");
+                        Console.WriteLine("Enter new phone number:\nFormat: 599123456 or +995599123456");
                         string newPhoneNumber = Console.ReadLine();
                         phoneBook.UpdateContact(nameToUpdate, newPhoneNumber);
                         break;

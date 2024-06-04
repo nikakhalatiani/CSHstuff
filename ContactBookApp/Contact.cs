@@ -29,7 +29,7 @@ namespace ContactBookApp
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException("Name cannot be empty.");
+                    throw new ArgumentException("Phone number cannot be empty.");
                 }
                 phoneNumber = value;
             }
