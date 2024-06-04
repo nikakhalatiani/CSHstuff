@@ -1,1 +1,5 @@
-{"nika":{"Name":"nika","PhoneNumber":"123456789"}}
+{
+  "nika": { "Name": "nika", "PhoneNumber": "123456789" },
+  "nika2": { "Name": "nika2", "PhoneNumber": "123456789" },
+  "gio": { "Name": "gio", "PhoneNumber": "456789132" }
+}

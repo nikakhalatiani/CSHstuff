@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ContactBookApp
+﻿namespace ContactBookApp
 {
     public class Program
     {
