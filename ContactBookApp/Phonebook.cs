@@ -82,7 +82,7 @@ namespace ContactBookApp
             Dictionary<string, Contact> matchedContacts = MatchName(name, contacts);
             if (matchedContacts.Count > 0)
             {
-                Console.WriteLine("We couldn't find the exact contact. Maybe you look");
+                Console.WriteLine("We couldn't find the exact contact. Maybe you searched for one of these:");
                 foreach (var contact in matchedContacts)
                 {
                     Console.WriteLine($"Name: {contact.Value.Name}, Phone Number: {contact.Value.PhoneNumber}");
@@ -122,7 +122,6 @@ namespace ContactBookApp
         private Dictionary<string, Contact> MatchName(string name, Dictionary<string, Contact> contacts)
         {
             Dictionary<string, Contact> matchedContacts = new Dictionary<string, Contact>();
-            // write line
             foreach (var contact in contacts)
             {
                 if (contact.Key.Contains(name.ToLower()))
@@ -130,7 +129,6 @@ namespace ContactBookApp
                     matchedContacts.Add(contact.Key, contact.Value);
                 }
             }
-            Console.WriteLine(matchedContacts.Count);
             return matchedContacts;
         }
 
