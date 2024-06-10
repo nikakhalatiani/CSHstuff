@@ -1,10 +1,22 @@
-﻿namespace ContactBookApp
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+
+namespace ContactBookApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static IConfiguration Configuration { get; set; }
+
+        public static async Task Main(string[] args)
         {
-            PhoneBook phoneBook = new PhoneBook();
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            Configuration = builder.Build();
+
+            PhoneBook phoneBook = new PhoneBook(Configuration.GetConnectionString("DefaultConnection"));
             string command = string.Empty;
 
             Console.WriteLine("Welcome to the Phone Book Application!");
@@ -21,50 +33,55 @@
                         string name = Console.ReadLine();
                         Console.WriteLine("Enter phone number:\nFormat: 599123456 or +995599123456");
                         string phoneNumber = Console.ReadLine();
-                        phoneBook.AddContact(name, phoneNumber);
+                        await phoneBook.AddContact(name, phoneNumber);
                         break;
                     case "remove":
-                        if (phoneBook.IsEmpty())
+                        if (await phoneBook.IsEmpty())
                         {
                             Console.WriteLine("No contacts to remove.");
                             break;
                         }
                         Console.WriteLine("Enter name:");
                         string nameToRemove = Console.ReadLine();
-                        phoneBook.RemoveContact(nameToRemove);
+                        await phoneBook.RemoveContact(nameToRemove);
                         break;
                     case "list":
-                        if (phoneBook.IsEmpty())
+                        if (await phoneBook.IsEmpty())
                         {
                             Console.WriteLine("No contacts to list.");
                             break;
                         }
-                        phoneBook.ListContacts();
-                        break;
-                    case "exit":
-                        Console.WriteLine("Exiting the application.");
+                        await phoneBook.ListContacts();
                         break;
                     case "find":
-                        if (phoneBook.IsEmpty())
+                        if (await phoneBook.IsEmpty())
                         {
                             Console.WriteLine("No contacts to find.");
                             break;
                         }
                         Console.WriteLine("Enter name:");
                         string nameToFind = Console.ReadLine();
-                        phoneBook.FindContact(nameToFind);
+                        await phoneBook.FindContact(nameToFind);
                         break;
                     case "update":
-                        if (phoneBook.IsEmpty())
+                        if (await phoneBook.IsEmpty())
                         {
                             Console.WriteLine("No contacts to update.");
                             break;
                         }
                         Console.WriteLine("Enter name:");
                         string nameToUpdate = Console.ReadLine();
+                        if (!await phoneBook.CheckIfPresent(nameToUpdate))
+                        {
+                            Console.WriteLine("Contact not found.");
+                            break;
+                        }
                         Console.WriteLine("Enter new phone number:\nFormat: 599123456 or +995599123456");
                         string newPhoneNumber = Console.ReadLine();
-                        phoneBook.UpdateContact(nameToUpdate, newPhoneNumber);
+                        await phoneBook.UpdateContact(nameToUpdate, newPhoneNumber);
+                        break;
+                    case "exit":
+                        Console.WriteLine("Exiting the application.");
                         break;
                     default:
                         Console.WriteLine("Invalid command.");
