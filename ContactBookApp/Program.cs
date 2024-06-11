@@ -10,13 +10,16 @@ namespace ContactBookApp
 
         public static async Task Main(string[] args)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            var builder = new ConfigurationBuilder().AddEnvironmentVariables();
 
             Configuration = builder.Build();
 
-            PhoneBook phoneBook = new PhoneBook(Configuration.GetConnectionString("DefaultConnection"));
+            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+
+            PhoneBook phoneBook = new PhoneBook(connectionString);
+
+            await phoneBook.InitializeDatabase();
+
             string command = string.Empty;
 
             Console.WriteLine("Welcome to the Phone Book Application!");
@@ -31,6 +34,11 @@ namespace ContactBookApp
                     case "add":
                         Console.WriteLine("Enter name:");
                         string name = Console.ReadLine();
+                        if (await phoneBook.CheckIfPresent(name))
+                        {
+                            Console.WriteLine("Contact already exists.");
+                            break;
+                        }
                         Console.WriteLine("Enter phone number:\nFormat: 599123456 or +995599123456");
                         string phoneNumber = Console.ReadLine();
                         await phoneBook.AddContact(name, phoneNumber);

@@ -8,12 +8,38 @@ namespace ContactBookApp
 {
     public class PhoneBook
     {
-        private readonly string _connectionString;
+        private string _connectionString;
 
         public PhoneBook(string connectionString)
         {
             _connectionString = connectionString;
         }
+
+
+        public async Task InitializeDatabase()
+        {
+
+            // var databaseConnectionString = _connectionString + "Database=;";
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var sql = "CREATE DATABASE IF NOT EXISTS ContactBookDB";
+                await connection.ExecuteAsync(sql);
+                _connectionString = _connectionString + "Database=ContactBookDB;";
+            }
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                // Create the Contacts table if it doesn't exist
+                var createTableSql = @"CREATE TABLE IF NOT EXISTS Contacts (
+                                        Name VARCHAR(255) PRIMARY KEY,
+                                        PhoneNumber VARCHAR(13) NOT NULL
+                                    )";
+                await connection.ExecuteAsync(createTableSql);
+            }
+        }
+
 
         public async Task AddContact(string name, string phoneNumber)
         {
@@ -163,20 +189,6 @@ namespace ContactBookApp
                 return count == 0;
             }
         }
-
-        // public async Task InitializeDatabase()
-        // {
-        //     using (var connection = new MySqlConnection(_connectionString))
-        //     {
-        //         await connection.OpenAsync();
-        //         var sql = @"CREATE TABLE IF NOT EXISTS Contacts (
-        //                         Id INT AUTO_INCREMENT PRIMARY KEY,
-        //                         Name VARCHAR(255) NOT NULL,
-        //                         PhoneNumber VARCHAR(13) NOT NULL
-        //                     )";
-        //         await connection.ExecuteAsync(sql);
-        //     }
-        // }
 
         public async Task<bool> CheckIfPresent(string name)
         {
