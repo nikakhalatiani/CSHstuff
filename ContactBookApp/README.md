@@ -22,10 +22,20 @@ The Contact Book Application is a simple console-based phone book application th
 ```sh
 cd path/to/ContactBookApp
 ```
+3. Configure the environment variable for the database connection string.
+   - Windows  
+    ```sh
+    $env:ConnectionStrings__DefaultConnection="Server=localhost;User ID=root;Password=your_password;"
+    ```
+   - Linux/MacOS
+    ```sh
+    export ConnectionStrings__DefaultConnection="Server=localhost;User ID=root;Password=your_password;"
+    ```
 
-3. Run the project.
+4. Build and Run the project.
 
 ```sh
+dotnet build
 dotnet run
 ```
 
