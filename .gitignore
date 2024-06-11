@@ -396,3 +396,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Environment variables
+.env
+
+# Example environment file should not be ignored
+!.env.example

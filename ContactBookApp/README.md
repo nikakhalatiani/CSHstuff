@@ -2,7 +2,7 @@
 
 ## Description
 
-The Contact Book Application is a simple console-based phone book application that allows users to add, remove, list, find, and update contacts. The application stores contact information in a file to maintain persistence across sessions using JSON serialization.
+The Contact Book Application is a simple console-based phone book application that allows users to add, remove, list, find, and update contacts. The application uses a MariaDB database for storing contact information.
 
 ## Features
 
@@ -19,25 +19,25 @@ The Contact Book Application is a simple console-based phone book application th
 1. Clone the repository or download the source code.
 2. Open a terminal and navigate to the project directory.
 
-```sh
-cd path/to/ContactBookApp
-```
-3. Configure the environment variable for the database connection string.
-   - Windows  
     ```sh
-    $env:ConnectionStrings__DefaultConnection="Server=localhost;User ID=root;Password=your_password;"
+    cd path/to/ContactBookApp
     ```
-   - Linux/MacOS
+3. Configure the environment variable for the database connection string.
+Copy the `.env.example` to `.env` and update the connection string:
     ```sh
-    export ConnectionStrings__DefaultConnection="Server=localhost;User ID=root;Password=your_password;"
+    cp .env.example .env
+    ```
+    Update the `.env` file with your actual database connection details:
+    ```sh
+    ConnectionStrings__DefaultConnection=Server=localhost;User ID=root;Password=YOUR_ACTUAL_PASSWORD;
     ```
 
 4. Build and Run the project.
 
-```sh
-dotnet build
-dotnet run
-```
+    ```sh
+    dotnet build
+    dotnet run
+    ```
 
 ## Usage
 

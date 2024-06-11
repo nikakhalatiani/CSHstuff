@@ -49,6 +49,12 @@ namespace ContactBookApp
                 return;
             }
 
+            if (await CheckIfPresent(name))
+            {
+                Console.WriteLine("Contact already exists.");
+                return;
+            }
+
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -100,7 +106,7 @@ namespace ContactBookApp
             }
         }
 
-        public async Task FindContact(string name)
+        public async Task<Contact> FindContact(string name)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -111,6 +117,7 @@ namespace ContactBookApp
                 if (contact != null)
                 {
                     Console.WriteLine($"Name: {contact.Name}, Phone Number: {contact.PhoneNumber}");
+                    return contact;
                 }
                 else
                 {
@@ -122,10 +129,12 @@ namespace ContactBookApp
                         {
                             Console.WriteLine($"Name: {matchedContact.Name}, Phone Number: {matchedContact.PhoneNumber}");
                         }
+                        return null;
                     }
                     else
                     {
                         Console.WriteLine("Contact not found.");
+                        return null;
                     }
                 }
             }
@@ -199,6 +208,26 @@ namespace ContactBookApp
                 var contact = await connection.QuerySingleOrDefaultAsync<Contact>(sql, new { Name = name });
 
                 return contact != null;
+            }
+        }
+
+        public async Task CleanDatabase()
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var sql = "DELETE FROM Contacts";
+                await connection.ExecuteAsync(sql);
+            }
+        }
+
+        public async Task<int> GetContactCount()
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var sql = "SELECT COUNT(*) FROM Contacts";
+                return await connection.ExecuteScalarAsync<int>(sql);
             }
         }
     }

@@ -16,6 +16,12 @@ namespace ContactBookApp
 
             var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
 
+            // if (string.IsNullOrEmpty(connectionString))
+            // {
+            //     Console.WriteLine("Connection string is missing.");
+            //     return;
+            // }
+
             PhoneBook phoneBook = new PhoneBook(connectionString);
 
             await phoneBook.InitializeDatabase();

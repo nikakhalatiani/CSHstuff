@@ -2,8 +2,8 @@ namespace ContactBookApp
 {
     public class Contact
     {
-        private string name;
-        private string phoneNumber;
+        private string name = string.Empty;
+        private string phoneNumber = string.Empty;
         public string Name
         {
             get

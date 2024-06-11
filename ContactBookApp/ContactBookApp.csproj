@@ -14,9 +14,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
-    <None Update="appsettings.json">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-  </None>
   </ItemGroup>
 
 </Project>
