@@ -2,6 +2,7 @@
 using Dapper;
 using MySqlConnector;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 
 namespace ContactBookApp
@@ -9,12 +10,13 @@ namespace ContactBookApp
     public class PhoneBook
     {
         private string _connectionString;
+        private readonly ILogger<PhoneBook> _logger;
 
-        public PhoneBook(string connectionString)
+        public PhoneBook(string connectionString, ILogger<PhoneBook> logger)
         {
             _connectionString = connectionString;
+            _logger = logger;
         }
-
 
         public async Task InitializeDatabase()
         {
@@ -45,13 +47,15 @@ namespace ContactBookApp
         {
             if (!IsPhoneNumberValid(phoneNumber))
             {
-                Console.WriteLine("Invalid phone number format.");
+                _logger.LogWarning("Invalid phone number format.");
+                // Console.WriteLine("Invalid phone number format.");
                 return;
             }
 
             if (await CheckIfPresent(name))
             {
-                Console.WriteLine("Contact already exists.");
+                _logger.LogWarning("Contact already exists.");
+                // Console.WriteLine("Contact already exists.");
                 return;
             }
 
@@ -63,11 +67,13 @@ namespace ContactBookApp
 
                 if (result > 0)
                 {
-                    Console.WriteLine("Contact added successfully.");
+                    _logger.LogInformation($"Contact '{name}' added successfully.");
+                    // Console.WriteLine("Contact added successfully.");
                 }
                 else
                 {
-                    Console.WriteLine("Failed to add contact.");
+                    _logger.LogError($"Failed to add contact '{name}'.");
+                    // Console.WriteLine("Failed to add contact.");
                 }
             }
         }
@@ -82,11 +88,13 @@ namespace ContactBookApp
 
                 if (result > 0)
                 {
-                    Console.WriteLine("Contact removed successfully.");
+                    _logger.LogInformation("Contact removed successfully.");
+                    // Console.WriteLine("Contact removed successfully.");
                 }
                 else
                 {
-                    Console.WriteLine("Contact not found.");
+                    _logger.LogWarning($"Contact '{name}' not found.");
+                    // Console.WriteLine("Contact not found.");
                 }
             }
         }
@@ -116,7 +124,8 @@ namespace ContactBookApp
 
                 if (contact != null)
                 {
-                    Console.WriteLine($"Name: {contact.Name}, Phone Number: {contact.PhoneNumber}");
+                    _logger.LogInformation($"Name: {contact.Name}, Phone Number: {contact.PhoneNumber}");
+                    // Console.WriteLine($"Name: {contact.Name}, Phone Number: {contact.PhoneNumber}");
                     return contact;
                 }
                 else
@@ -133,7 +142,8 @@ namespace ContactBookApp
                     }
                     else
                     {
-                        Console.WriteLine("Contact not found.");
+                        _logger.LogWarning($"Contact '{name}' not found.");
+                        // Console.WriteLine("Contact not found.");
                         return null;
                     }
                 }
@@ -145,7 +155,8 @@ namespace ContactBookApp
 
             if (!IsPhoneNumberValid(newPhoneNumber))
             {
-                Console.WriteLine("Invalid phone number format.");
+                _logger.LogWarning("Invalid phone number format.");
+                // Console.WriteLine("Invalid phone number format.");
                 return;
             }
 
@@ -157,11 +168,13 @@ namespace ContactBookApp
 
                 if (result > 0)
                 {
-                    Console.WriteLine("Contact updated successfully.");
+                    _logger.LogInformation($"Contact '{name}' updated successfully.");
+                    // Console.WriteLine("Contact updated successfully.");
                 }
                 else
                 {
-                    Console.WriteLine("Contact not found.");
+                    _logger.LogWarning($"Contact '{name}' not found.");
+                    // Console.WriteLine("Contact not found.");
                 }
             }
         }

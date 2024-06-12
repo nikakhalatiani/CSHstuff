@@ -1,6 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace ContactBookApp
 {
@@ -10,21 +13,27 @@ namespace ContactBookApp
 
         public static async Task Main(string[] args)
         {
-            var builder = new ConfigurationBuilder().AddEnvironmentVariables();
+            // var builder = new ConfigurationBuilder().AddEnvironmentVariables();
 
-            Configuration = builder.Build();
+            var services = new ServiceCollection();
+            ConfigureServices(services);
 
-            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+            var serviceProvider = services.BuildServiceProvider();
 
-            // if (string.IsNullOrEmpty(connectionString))
-            // {
-            //     Console.WriteLine("Connection string is missing.");
-            //     return;
-            // }
+            var logger = serviceProvider.GetService<ILogger<Program>>();
+            logger.LogInformation("Starting application");
 
-            PhoneBook phoneBook = new PhoneBook(connectionString);
+            // Configuration = builder.Build();
+
+            // var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+
+            var phoneBook = serviceProvider.GetRequiredService<PhoneBook>();
 
             await phoneBook.InitializeDatabase();
+
+            // PhoneBook phoneBook = new PhoneBook(connectionString);
+
+            // await phoneBook.InitializeDatabase();
 
             string command = string.Empty;
 
@@ -102,6 +111,27 @@ namespace ContactBookApp
                         break;
                 }
             }
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            var builder = new ConfigurationBuilder().AddEnvironmentVariables();
+            Configuration = builder.Build();
+            services.AddSingleton(Configuration);
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+                loggingBuilder.AddNLog("nlog.config");
+            });
+
+            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new Exception("Connection string is not set.");
+            }
+            services.AddSingleton(new PhoneBook(connectionString, services.BuildServiceProvider().GetRequiredService<ILogger<PhoneBook>>()));
         }
     }
 }

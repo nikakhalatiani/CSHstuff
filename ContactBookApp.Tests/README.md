@@ -20,5 +20,5 @@ This project uses xUnit for unit testing.
 
 ## Setting up own Test
 
-Head to `ContactBookAppTests.cs` file and add your own test to four existing. 
+Head to `PhoneBookTests.cs` file and add your own test to four existing. 
 It is recommended to clean Database before each test.

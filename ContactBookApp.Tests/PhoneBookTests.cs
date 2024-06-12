@@ -4,6 +4,8 @@ using ContactBookApp;
 using Microsoft.Extensions.Configuration;
 using Dapper;
 using MySqlConnector;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ContactBookApp.Tests
 {
@@ -21,7 +23,9 @@ namespace ContactBookApp.Tests
             {
                 throw new Exception("Connection string is not set.");
             }
-            _phoneBook = new PhoneBook(connectionString);
+            var logger = NullLogger<PhoneBook>.Instance;
+
+            _phoneBook = new PhoneBook(connectionString, logger);
             _phoneBook.InitializeDatabase().Wait();
             _phoneBook.CleanDatabase().Wait();
         }
